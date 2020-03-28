@@ -128,8 +128,20 @@ export default class Trimmer extends React.Component {
   createRightHandlePanResponder = () => PanResponder.create({
     onStartShouldSetPanResponder: (evt, gestureState) => true,
     onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
-    onMoveShouldSetPanResponder: (evt, gestureState) => true,
-    onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
+    onMoveShouldSetPanResponder: (evt, gestureState) => {
+      this.setState({
+        trimming: true,
+        trimmingRightHandleValue: this.props.trimmerRightHandlePosition,
+        trimmingLeftHandleValue: this.props.trimmerLeftHandlePosition,
+      })
+    },
+    onMoveShouldSetPanResponderCapture: (evt, gestureState) => {
+      this.setState({
+        trimming: true,
+        trimmingRightHandleValue: this.props.trimmerRightHandlePosition,
+        trimmingLeftHandleValue: this.props.trimmerLeftHandlePosition,
+      })
+    },
     onPanResponderGrant: (evt, gestureState) => {
       this.setState({
         trimming: true,
@@ -174,6 +186,8 @@ export default class Trimmer extends React.Component {
       } else {
         this.setState({ trimmingRightHandleValue: newBoundedTrimmerRightHandlePosition })
       }
+     this.handleMoveSizeChange()
+     this.setState({ trimming: false })
     },
     onPanResponderRelease: (evt, gestureState) => {
       this.handleHandleSizeChange()
@@ -186,8 +200,20 @@ export default class Trimmer extends React.Component {
   createLeftHandlePanResponder = () => PanResponder.create({
     onStartShouldSetPanResponder: (evt, gestureState) => true,
     onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
-    onMoveShouldSetPanResponder: (evt, gestureState) => true,
-    onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
+    onMoveShouldSetPanResponder: (evt, gestureState) => {
+      this.setState({
+        trimming: true,
+        trimmingRightHandleValue: this.props.trimmerRightHandlePosition,
+        trimmingLeftHandleValue: this.props.trimmerLeftHandlePosition,
+      })
+    },
+    onMoveShouldSetPanResponderCapture: (evt, gestureState) => {
+      this.setState({
+        trimming: true,
+        trimmingRightHandleValue: this.props.trimmerRightHandlePosition,
+        trimmingLeftHandleValue: this.props.trimmerLeftHandlePosition,
+      })
+    },
     onPanResponderGrant: (evt, gestureState) => {
       this.setState({
         trimming: true,
@@ -233,6 +259,9 @@ export default class Trimmer extends React.Component {
       } else {
         this.setState({ trimmingLeftHandleValue: newBoundedTrimmerLeftHandlePosition })
       }
+
+     this.handleMoveSizeChange()
+     this.setState({ trimming: false })
     },
     onPanResponderRelease: (evt, gestureState) => {
       this.handleHandleSizeChange()
@@ -317,6 +346,15 @@ export default class Trimmer extends React.Component {
     });
   }
 
+  handleMoveSizeChange = () => {
+    const { onMove } = this.props;
+    const { trimmingLeftHandleValue, trimmingRightHandleValue } = this.state;
+    onMove && onMove({
+      leftPosition: trimmingLeftHandleValue | 0,
+      rightPosition: trimmingRightHandleValue | 0,
+    });
+  }
+
   handleLeftHandlePressIn = () => {
     const { onLeftHandlePressIn } = this.props;
     onLeftHandlePressIn && onLeftHandlePressIn()
@@ -325,6 +363,11 @@ export default class Trimmer extends React.Component {
   handleRightHandlePressIn = () => {
     const { onRightHandlePressIn } = this.props;
     onRightHandlePressIn && onRightHandlePressIn()
+  }
+
+  handleLeftMovePressIn = () => {
+    const { onLeftMovePressIn } = this.props;
+    onLeftMovePressIn && onLeftMovePressIn()
   }
 
   handleScrubberPressIn = () => {
